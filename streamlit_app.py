@@ -5,12 +5,12 @@ import io
 from collections import Counter, defaultdict
 
 # Configuração da página
-st.set_page_config(page_title="FIVA 13.0 - Extrator de Dadores", layout="wide")
+st.set_page_config(page_title="FIVA - Extração de Emails", layout="wide")
 
-st.title("FIVA 13.0 - Extrator de Dadores")
+st.title("FIVA - Extração de Emails")
 st.markdown("""
 Esta aplicação extrai emails e dados de dadores a partir de ficheiros PDF, 
-ordenando-os sequencialmente e corrigindo erros comuns.
+ordenando-os sequencialmente e corrigindo erros comuns, apresenta também dados estatísticos com base na listagem fornecida
 """)
 
 # ============================================================================
@@ -32,7 +32,7 @@ def limpar_lixo_final_pt(email):
         '.netcabo.pt', '.clix.pt', '.vodafone.pt', '.nos.pt', '.mail.pt',
         '.com.pt', '.org.pt', '.gov.pt', '.edu.pt', '.net.pt', '.int.pt',
         '.protonmail.com', '.icloud.com', '.outlook.com', '.hotmail.com',
-        '.live.com', '.gmail.com', '.me.com', '.yahoo.com',
+        '.live.com', '.gmail.com', '.me.com', '.yahoo.com', 
         '.pt', '.com', '.net', '.org', '.eu', '.br', '.fr', '.es', '.uk', '.co.uk'
     ]
 
@@ -416,3 +416,4 @@ else:
             except Exception as e:
                 st.error(f"❌ Ocorreu um erro crítico: {e}")
                 st.exception(e)
+
