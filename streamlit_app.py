@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 # Configuração da página
 st.set_page_config(page_title="F  I  V  A", layout="wide")
 
-st.title("Extração de Emails")
+st.title("F  I  V  A  - Extração de Emails")
 st.markdown("""
 Esta aplicação extrai emails e dados de dadores a partir de ficheiros PDF, 
 ordenando-os sequencialmente e corrigindo erros comuns, apresenta também dados estatísticos com base na listagem fornecida,
@@ -238,7 +238,7 @@ def gerar_relatorio_str(dadores):
     total_emails = len(e_aptos) + len(e_susp) + len(e_elim)
     total_uni = len(unicos)
 
-    output.write("RELATÓRIO FINAL DE DADORES - FIVA 13.0 (SEQUENTIAL)\n")
+    output.write("RELATÓRIO FINAL DE DADORES - FIVA (SEQUENTIAL)\n")
     output.write("==================================================\n\n")
 
     # ESTATÍSTICAS
@@ -419,6 +419,7 @@ else:
             except Exception as e:
                 st.error(f"❌ Ocorreu um erro crítico: {e}")
                 st.exception(e)
+
 
 
 
