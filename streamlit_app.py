@@ -302,28 +302,117 @@ def gerar_relatorio_str(dadores):
 # INTERFACE PRINCIPAL
 # ============================================================================
 
-uploaded_file = st.file_uploader("Carregue o seu ficheiro PDF", type="pdf")
+# Sidebar com Informações e Upload
+with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/2966/2966334.png", width=100) # Icone genérico de saúde/sangue
+    st.title("FIVA 13.0")
+    st.markdown("---")
+    st.markdown("### 📂 Upload")
+    uploaded_file = st.file_uploader("Carregue o ficheiro PDF aqui", type="pdf", help="Arraste ou clique para selecionar.")
+    st.markdown("---")
+    st.info("ℹ️ **Como usar:**\n1. Carregue o PDF.\n2. Clique em 'Processar'.\n3. Analise as estatísticas.\n4. Descarregue o relatório.")
 
-if uploaded_file is not None:
-    if st.button("Processar PDF"):
-        with st.spinner("A processar e a corrigir dados..."):
+# Área Principal
+if uploaded_file is None:
+    st.markdown("""
+    <div style="text-align: center; padding: 50px;">
+        <h1>Bem-vindo ao Extrator FIVA! 👋</h1>
+        <p style="font-size: 1.2em; color: gray;">
+            A maneira mais rápida de extrair e organizar emails de dadores.<br>
+            A auditoria automática corrige erros comuns e ordena tudo sequencialmente.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Exemplo de Cards (Visual apenas)
+    c1, c2, c3 = st.columns(3)
+    with c1: st.markdown("### 🚀 Rápido\nProcessa centenas de páginas em segundos.")
+    with c2: st.markdown("### 🧹 Limpo\nCorrige automaticamente erros de email.")
+    with c3: st.markdown("### 📊 Organizado\nRelatórios prontos a usar.")
+
+else:
+    # Botão de Ação Principal
+    if st.button("🚀 Iniciar Processamento FIVA", type="primary", use_container_width=True):
+        with st.spinner("🔄 A ler PDF, a limpar dados e a gerar relatório..."):
             try:
+                # Processamento
                 dados_extraidos = extrair_dados(uploaded_file)
-                relatorio = gerar_relatorio_str(dados_extraidos)
                 
-                st.success("Processamento concluído com sucesso!")
+                # Calcular estatísticas para a UI
+                historico = defaultdict(list)
+                for d in dados_extraidos: historico[d['ID']].append(d)
+                unicos = [lista[-1] for lista in historico.values()]
                 
-                # Botão de Download
-                st.download_button(
-                    label="📥 Descarregar Relatório Final (TXT)",
-                    data=relatorio,
-                    file_name="FIVA_Relatorio_Final_V13.txt",
-                    mime="text/plain"
-                )
+                aptos = [d for d in unicos if d['Status'] == "APTO"]
+                susp = [d for d in unicos if d['Status'] == "SUSPENSO"]
+                elim = [d for d in unicos if d['Status'] == "ELIMINADO"]
                 
-                # Preview simples das estatísticas no ecrã
-                st.subheader("Pré-visualização do Relatório")
-                st.text_area("Conteúdo do Relatório:", relatorio, height=400)
+                def extrair_emails_set(lista_dadores):
+                     return sorted(list(set([d['Email'] for d in lista_dadores if d['Email']]))) # Simplificado para UI
+
+                e_aptos_count = len(extrair_emails_set(aptos))
+                e_susp_count = len(extrair_emails_set(susp))
+                e_elim_count = len(extrair_emails_set(elim))
                 
+                total_emails = e_aptos_count + e_susp_count + e_elim_count
+                
+                # UI de Resultados
+                st.success("✅ Processamento concluído com sucesso!")
+                
+                # Métricas Principais
+                st.markdown("### 📊 Resumo Executivo")
+                col1, col2, col3, col4 = st.columns(4)
+                col1.metric("Total Registos", len(dados_extraidos))
+                col2.metric("Dadores Únicos", len(unicos))
+                col3.metric("Emails Válidos", total_emails)
+                if len(unicos) > 0:
+                    col4.metric("Cobertura", f"{(total_emails/len(unicos))*100:.1f}%")
+                else:
+                    col4.metric("Cobertura", "0%")
+
+                st.markdown("---")
+
+                # Tabs para organização
+                tab1, tab2, tab3 = st.tabs(["📋 Relatório & Download", "📈 Detalhe Status", "🛠️ Logs Técnicos"])
+
+                with tab1:
+                    st.subheader("📄 Relatório Final")
+                    relatorio = gerar_relatorio_str(dados_extraidos)
+                    
+                    st.download_button(
+                        label="📥 Descarregar Relatório Completo (TXT)",
+                        data=relatorio,
+                        file_name="FIVA_Relatorio_Final_V13.txt",
+                        mime="text/plain",
+                        type="primary"
+                    )
+                    
+                    with st.expander("👁️ Pré-visualizar Conteúdo do Ficheiro"):
+                        st.code(relatorio, language="text")
+
+                with tab2:
+                    c_apt, c_susp, c_elim = st.columns(3)
+                    with c_apt:
+                        st.markdown(f"**✅ APTOS**")
+                        st.markdown(f"**{len(aptos)}** dadores")
+                        st.markdown(f"**{e_aptos_count}** emails")
+                    with c_susp:
+                        st.markdown(f"**⏸️ SUSPENSOS**")
+                        st.markdown(f"**{len(susp)}** dadores")
+                        st.markdown(f"**{e_susp_count}** emails")
+                    with c_elim:
+                        st.markdown(f"**❌ ELIMINADOS**")
+                        st.markdown(f"**{len(elim)}** dadores")
+                        st.markdown(f"**{e_elim_count}** emails")
+
+                with tab3:
+                    st.subheader("🔧 Auditoria de Correções")
+                    if st.session_state.log_correcoes:
+                        st.warning(f"Foram realizadas {len(st.session_state.log_correcoes)} correções automáticas.")
+                        st.dataframe(st.session_state.log_correcoes)
+                    else:
+                        st.info("Nenhuma correção técnica foi necessária. Os dados estavam limpos!")
+
             except Exception as e:
-                st.error(f"Ocorreu um erro ao processar o ficheiro: {e}")
+                st.error(f"❌ Ocorreu um erro crítico: {e}")
+                st.exception(e)
