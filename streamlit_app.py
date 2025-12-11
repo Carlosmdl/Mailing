@@ -307,8 +307,8 @@ def gerar_relatorio_str(dadores):
 
 # Sidebar com Informações e Upload
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2966/2966334.png", width=100) # Icone genérico de saúde/sangue
-    st.title("F  I  V  A")
+    st.image("https://cdn-icons-png.flaticon.com/512/2966/2966330.png", width=200) # Icone genérico de saúde/sangue
+    st.title("FIVApp")
     st.markdown("---")
     st.markdown("### 📂 Upload")
     uploaded_file = st.file_uploader("Carregue o ficheiro PDF aqui", type="pdf", help="Arraste ou clique para selecionar.")
@@ -419,6 +419,7 @@ else:
             except Exception as e:
                 st.error(f"❌ Ocorreu um erro crítico: {e}")
                 st.exception(e)
+
 
 
 
