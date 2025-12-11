@@ -316,7 +316,7 @@ with st.sidebar:
 if uploaded_file is None:
     st.markdown("""
     <div style="text-align: center; padding: 50px;">
-        <h1>Bem-vindo ao Extrator FIVA! 👋</h1>
+        <h1>Olá ENF! 👋</h1>
         <p style="font-size: 1.2em; color: gray;">
             A maneira mais rápida de extrair e organizar emails de dadores.<br>
             A auditoria automática corrige erros comuns e ordena tudo sequencialmente.
@@ -416,4 +416,5 @@ else:
             except Exception as e:
                 st.error(f"❌ Ocorreu um erro crítico: {e}")
                 st.exception(e)
+
 
