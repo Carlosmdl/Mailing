@@ -10,7 +10,10 @@ st.set_page_config(page_title="FIVA - Extração de Emails", layout="wide")
 st.title("FIVA - Extração de Emails")
 st.markdown("""
 Esta aplicação extrai emails e dados de dadores a partir de ficheiros PDF, 
-ordenando-os sequencialmente e corrigindo erros comuns, apresenta também dados estatísticos com base na listagem fornecida
+ordenando-os sequencialmente e corrigindo erros comuns, apresenta também dados estatísticos com base na listagem fornecida,
+não te esqueças de ordenar a listagem por Código de Conclusão, e incluir todas as sessões de colheita (%)...
+já não precisamos de "queimar pestanas" a analisar linha a linha, nem precisamos de arriscar desenvolver doenças profissionais
+por repetir tantas vezes o Ctrl+C, Ctrl+V...
 """)
 
 # ============================================================================
@@ -416,6 +419,7 @@ else:
             except Exception as e:
                 st.error(f"❌ Ocorreu um erro crítico: {e}")
                 st.exception(e)
+
 
 
 
