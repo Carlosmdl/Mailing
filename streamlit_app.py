@@ -5,9 +5,9 @@ import io
 from collections import Counter, defaultdict
 
 # Configuração da página
-st.set_page_config(page_title="FIVA - Extração de Emails", layout="wide")
+st.set_page_config(page_title="F  I  V  A", layout="wide")
 
-st.title("FIVA - Extração de Emails")
+st.title("Extração de Emails")
 st.markdown("""
 Esta aplicação extrai emails e dados de dadores a partir de ficheiros PDF, 
 ordenando-os sequencialmente e corrigindo erros comuns, apresenta também dados estatísticos com base na listagem fornecida,
@@ -419,6 +419,7 @@ else:
             except Exception as e:
                 st.error(f"❌ Ocorreu um erro crítico: {e}")
                 st.exception(e)
+
 
 
 
